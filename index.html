@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ✏️ CAMBIA EL TÍTULO DE LA PESTAÑA AQUÍ -->
+    <title>☁️ Cinnamoroll LITA ☁️</title>
+    
+    <!-- Importando fuentes cute y redondeadas (No borrar) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Varela+Round&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 🎀 VARIABLES DE COLOR & ESTILO (PANEL DE CONTROL) 🎀 */
+        :root {
+            --bg-pink: #FFF0F5;       /* Color de fondo general */
+            --main-pink: #FFD6E7;     /* Rosa principal (bordes, botones) */
+            --dark-pink: #FFB7D5;     /* Rosa más oscuro para contrastes */
+            --accent-blue: #E0F7FA;   /* Azul cielo (ojos Cinnamoroll) */
+            --text-color: #9E768F;    /* Color del texto */
+            --white: #FFFFFF;         /* Blanco */
+            --shadow: rgba(255, 182, 193, 0.6); /* Color de la sombra */
+            --border-radius: 25px;    /* Que tan redondos son los bordes */
+        }
+
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            cursor: none; /* Ocultamos el cursor por defecto para usar el personalizado */
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            padding-top: 95px; /* Espacio superior para banner publicitario */
+            background-color: var(--bg-pink);
+            /* Patrón de fondo (cuadros tipo mantel) */
+            background-image: 
+                linear-gradient(90deg, transparent 50%, rgba(255, 255, 255, 0.5) 50%),
+                linear-gradient(0deg, transparent 50%, rgba(255, 255, 255, 0.5) 50%);
+            background-size: 50px 50px;
+            font-family: 'Quicksand', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 🖱️ CURSOR PERSONALIZADO */
+        .cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 25px;
+            height: 25px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23FFD6E7" stroke="%23FFB7D5" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>') no-repeat center;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 20000;
+            transform: translate(-50%, -50%);
+            animation: spin 8s linear infinite;
+        }
+
+        .star-particle {
+            position: fixed;
+            pointer-events: none;
+            color: #FFD6E7;
+            font-size: 10px;
+            z-index: 19999;
+            animation: fadeOut 1s forwards;
+            text-shadow: 0 0 5px #fff;
+        }
+
+        @keyframes fadeOut {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: scale(0) rotate(180deg) translateY(20px); opacity: 0; }
+        }
+
+        /* ✨ PANTALLA DE BIENVENIDA (SPLASH SCREEN) */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-pink);
+            background-image: 
+                linear-gradient(90deg, transparent 50%, rgba(255, 255, 255, 0.5) 50%),
+                linear-gradient(0deg, transparent 50%, rgba(255, 255, 255, 0.5) 50%);
+            background-size: 50px 50px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .splash-content {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 40px;
+            border-radius: 40px;
+            border: 4px solid var(--white);
+            box-shadow: 0 10px 30px var(--shadow);
+            text-align: center;
+            backdrop-filter: blur(5px);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .splash-gif {
+            width: 200px;
+            height: auto;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 3px solid var(--main-pink);
+        }
+
+        #enter-btn {
+            padding: 15px 50px;
+            background: var(--white);
+            border: 3px solid var(--main-pink);
+            border-radius: 50px;
+            color: var(--text-color);
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            cursor: none;
+            box-shadow: 0 5px 15px rgba(255, 182, 193, 0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            outline: none;
+        }
+
+        #enter-btn:hover {
+            transform: scale(1.1);
+            background: var(--main-pink);
+            color: var(--white);
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.8);
+        }
+
+        /* ☁️ NUBES KAWAII DE FONDO */
+        .kawaii-clouds {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95); /* Opacidad aumentada */
+            border-radius: 50px;
+            animation: drift linear infinite;
+            filter: blur(1px);
+        }
+
+        .cloud::after, .cloud::before {
+            content: '';
+            position: absolute;
+            background: inherit;
+            border-radius: 50%;
+        }
+
+        /* Configuración de las nubes */
+        .c1 { width: 100px; height: 40px; top: 10%; animation-duration: 25s; left: -150px; }
+        .c1::after { width: 40px; height: 40px; top: -20px; left: 15px; }
+        .c1::before { width: 50px; height: 50px; top: -30px; left: 40px; }
+
+        .c2 { width: 120px; height: 50px; top: 30%; animation-duration: 35s; animation-delay: 5s; opacity: 0.9; left: -150px; }
+        .c2::after { width: 50px; height: 50px; top: -25px; left: 20px; }
+        .c2::before { width: 60px; height: 60px; top: -35px; left: 50px; }
+        
+        .c3 { width: 80px; height: 35px; bottom: 20%; animation-duration: 30s; animation-delay: 2s; left: -150px; }
+        .c3::after { width: 35px; height: 35px; top: -15px; left: 10px; }
+        .c3::before { width: 45px; height: 45px; top: -25px; left: 30px; }
+
+        .c4 { width: 140px; height: 60px; top: 60%; animation-duration: 40s; animation-delay: 0s; left: -150px; opacity: 0.9; }
+        .c4::after { width: 60px; height: 60px; top: -30px; left: 25px; }
+        .c4::before { width: 70px; height: 70px; top: -40px; left: 55px; }
+
+        .c5 { width: 90px; height: 40px; top: 85%; animation-duration: 28s; animation-delay: 10s; left: -150px; }
+        .c5::after { width: 40px; height: 40px; top: -20px; left: 10px; }
+        .c5::before { width: 50px; height: 50px; top: -25px; left: 30px; }
+
+        @keyframes drift {
+            from { transform: translateX(-200px); }
+            to { transform: translateX(110vw); }
+        }
+
+        /* LAYOUT PRINCIPAL */
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            grid-template-rows: auto auto auto 1fr;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
+            border: 4px solid var(--white);
+            box-shadow: 0 10px 30px var(--shadow);
+            position: relative;
+        }
+
+        /* 🕰️ HEADER */
+        .header-widget {
+            grid-column: 1 / -1;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(255, 193, 220, 0.3);
+            border: 2px solid var(--main-pink);
+            position: relative;
+            overflow: hidden;
+        }
+        .header-widget::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: radial-gradient(circle, var(--main-pink) 4px, transparent 5px);
+            background-size: 15px 15px;
+        }
+        .clock-display {
+            font-family: 'Varela Round', sans-serif;
+            font-size: 3rem;
+            color: var(--dark-pink);
+            text-shadow: 2px 2px 0px #fff;
+        }
+        .date-display { text-align: right; font-weight: 700; font-size: 1.1rem; }
+
+        /* 🪪 PERFIL CARD */
+        .profile-section {
+            background: var(--white);
+            border-radius: 35px;
+            padding: 30px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 5px 15px var(--shadow);
+            border: 3px solid var(--accent-blue);
+            position: relative;
+        }
+
+        .profile-pic-placeholder {
+            width: 140px;
+            height: 140px;
+            position: relative;
+            background: var(--bg-pink);
+            border-radius: 50%;
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+
+        .profile-pic-placeholder::before {
+            content: '';
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border-radius: 50%;
+            border: 4px dotted var(--dark-pink);
+            box-shadow: 0 0 0 4px var(--white);
+            animation: spin 10s linear infinite; 
+            z-index: 1;
+        }
+
+        .profile-pic-placeholder img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .online-status-container {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+            background: #f0fdf4; padding: 5px 12px; border-radius: 20px; border: 1px solid #dcfce7;
+        }
+
+        /* ✨ ANIMACIÓN PARPADEO LUZ EN LÍNEA */
+        @keyframes pulse-green {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(76, 175, 80, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+        }
+
+        .status-dot { 
+            width: 10px; 
+            height: 10px; 
+            background-color: #4CAF50; 
+            border-radius: 50%; 
+            box-shadow: 0 0 5px #4CAF50;
+            animation: pulse-green 2s infinite; 
+        }
+        
+        .status-text { color: #4CAF50; font-weight: 700; font-size: 0.9rem; }
+        .country-flag { width: 24px; height: auto; vertical-align: middle; }
+        .profile-name { font-size: 1.8rem; color: var(--text-color); margin: 5px 0; font-weight: 700; font-family: 'Varela Round', sans-serif; }
+        .profile-subtitle { font-size: 1rem; color: var(--dark-pink); margin-top: -10px; margin-bottom: 10px; font-weight: 500; }
+
+        /* 📱 GRID DE APPS & WIDGETS */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        .app-icon {
+            background: var(--white);
+            border-radius: 25px;
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+        }
+        .app-icon:hover {
+            transform: scale(1.05) translateY(-5px);
+            border-color: var(--main-pink);
+            background: #FFF9FC;
+        }
+        .app-svg { width: 50px; height: 50px; margin-bottom: 8px; }
+
+        .gif-widget {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .widget-container {
+            background: var(--white);
+            border-radius: 25px;
+            padding: 0; 
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid var(--main-pink);
+            overflow: hidden; 
+        }
+
+        /* 🎵 REPRODUCTOR DE MÚSICA */
+        .music-player {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #FFF0F5 0%, #FFFFFF 100%);
+            border-radius: 30px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 2px solid var(--main-pink);
+            box-shadow: inset 0 0 20px rgba(255, 214, 231, 0.5);
+            position: relative;
+        }
+        
+        .equalizer-cover {
+            width: 80px;
+            height: 80px;
+            background: var(--main-pink);
+            border-radius: 20px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 4px;
+            padding-bottom: 20px;
+            overflow: hidden;
+            border: 2px solid white;
+        }
+        
+        .eq-bar {
+            width: 8px;
+            background: white;
+            border-radius: 5px;
+            animation: bounce 1s infinite;
+        }
+        .eq-bar:nth-child(1) { height: 30%; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { height: 60%; animation-delay: 0.3s; }
+        .eq-bar:nth-child(3) { height: 40%; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { height: 70%; animation-delay: 0.4s; }
+
+        .playing .eq-bar { animation-play-state: running; }
+        .paused .eq-bar { animation-play-state: paused; height: 10%; transition: height 0.3s; }
+
+        @keyframes bounce { 0%, 100% { height: 20%; } 50% { height: 80%; } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .track-info { flex-grow: 1; }
+        .track-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
+        
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 80px;
+            height: 5px;
+            background: #FFE4E1;
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            background: var(--main-pink);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+        }
+
+        .controls { display: flex; gap: 15px; font-size: 1.5rem; color: var(--dark-pink); }
+        .control-btn { cursor: pointer; transition: transform 0.2s; }
+        .control-btn:hover { transform: scale(1.2); color: var(--main-pink); }
+
+        /* 📜 MARQUEE (TEXTO DESPLAZABLE) */
+        .marquee-widget {
+            grid-column: 1 / -1;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 12px 0;
+            border: 2px solid var(--main-pink);
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .marquee-track {
+            display: flex;
+            gap: 30px; 
+            width: fit-content;
+            animation: scroll-left 15s linear infinite;
+            font-family: 'Varela Round', sans-serif;
+            color: var(--main-pink);
+            font-size: 1.5rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        
+        @keyframes scroll-left {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* 🐰 CINNAMOROLL FLOTANTE */
+        .cinna-floating-container {
+            position: absolute;
+            top: -65px; 
+            right: 20px;
+            width: 150px;
+            height: 120px;
+            z-index: 100;
+            transform: rotate(5deg);
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+            animation: float 4s ease-in-out infinite;
+        }
+        .cinna-svg { width: 100%; height: 100%; }
+
+        /* 🦶 FOOTER (FIRMA) */
+        .footer-copyright {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.3; 
+            margin-top: 10px;
+            font-weight: 500;
+            transition: all 0.5s ease;
+            cursor: help; 
+        }
+
+        .footer-copyright:hover {
+            opacity: 1; 
+            text-shadow: 0 0 10px var(--main-pink); 
+            transform: scale(1.05);
+        }
+
+        /* MODALES */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 240, 245, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10002;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+        
+        .modal-active { opacity: 1; visibility: visible; }
+
+        .modal-box {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 30px;
+            padding: 30px;
+            border: 4px solid var(--main-pink);
+            box-shadow: 0 10px 40px rgba(255, 182, 193, 0.4);
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        
+        .modal-active .modal-box { transform: translateY(0); }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--main-pink);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Animaciones */
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-10px) rotate(8deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 📱 RESPONSIVE */
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; padding: 15px; margin-top: 50px; }
+            .apps-grid { grid-template-columns: repeat(2, 1fr); }
+            .header-widget { flex-direction: column; text-align: center; gap: 10px; }
+            .cinna-floating-container { top: -80px; right: 50%; transform: translateX(50%); width: 120px; }
+        }
+        .text-sm { font-size: 0.8rem; opacity: 0.8; }
+        .text-bold { font-weight: 700; }
+        button { border: none; background: transparent; transition: transform 0.2s; }
+        button:hover { transform: scale(1.1); }
+
+    </style>
+</head>
+<body>
+
+    <!-- 🖱️ CURSOR -->
+    <div class="cursor-dot" id="cursor-dot"></div>
+
+    <!-- ✨ PANTALLA DE BIENVENIDA -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <!-- src="bienvenida.gif" en local -->
+            <img src="https://i.imgur.com/C46Hhk0.gif" alt="Bienvenida Cinnamoroll" class="splash-gif">
+            <br>
+            <button id="enter-btn">Ingresar</button>
+        </div>
+    </div>
+
+    <!-- ☁️ FONDO DE NUBES -->
+    <div class="kawaii-clouds">
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="cloud c3"></div>
+        <div class="cloud c4"></div>
+        <div class="cloud c5"></div>
+        <div class="cloud c1" style="top: 50%; animation-delay: 12s; left: -200px;"></div>
+        <div class="cloud c3" style="top: 15%; animation-delay: 7s; left: -100px;"></div>
+    </div>
+
+    <!-- 🖥️ CONTENEDOR PRINCIPAL -->
+    <div class="main-container">
+        
+        <!-- 🐰 CONEJO DECORATIVO ARRIBA (DIBUJADO EN CÓDIGO) -->
+        <div class="cinna-floating-container">
+            <svg class="cinna-svg" viewBox="0 0 200 150">
+                <ellipse cx="40" cy="60" rx="40" ry="25" fill="#FFFFFF" transform="rotate(-20 40 60)" />
+                <ellipse cx="160" cy="60" rx="40" ry="25" fill="#FFFFFF" transform="rotate(20 160 60)" />
+                <ellipse cx="100" cy="80" rx="70" ry="50" fill="#FFFFFF" />
+                <circle cx="75" cy="80" r="5" fill="#4DD0E1" />
+                <circle cx="125" cy="80" r="5" fill="#4DD0E1" />
+                <ellipse cx="65" cy="90" rx="8" ry="5" fill="#FFD6E7" opacity="0.6" />
+                <ellipse cx="135" cy="90" rx="8" ry="5" fill="#FFD6E7" opacity="0.6" />
+                <path d="M90 90 Q100 98 110 90" stroke="#4DD0E1" stroke-width="3" fill="none" stroke-linecap="round" />
+                <ellipse cx="80" cy="120" rx="15" ry="12" fill="#FFFFFF" />
+                <ellipse cx="120" cy="120" rx="15" ry="12" fill="#FFFFFF" />
+            </svg>
+        </div>
+
+        <!-- 1. HEADER (RELOJ Y FECHA) -->
+        <div class="header-widget">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <svg width="40" height="30" viewBox="0 0 100 60">
+                    <path d="M50 30 L20 10 Q10 5 10 20 Q10 35 20 30 L50 30 L80 30 Q90 35 90 20 Q90 5 80 10 Z" fill="#FFD6E7" stroke="#FFB7D5" stroke-width="3"/>
+                    <circle cx="50" cy="30" r="8" fill="#FFFFFF"/>
+                </svg>
+                <div class="clock-display" id="clock">00:00</div>
+            </div>
+            <div class="date-display">
+                <div id="day-name" style="font-size: 1.4rem; color: var(--main-pink);">Miércoles</div>
+                <div id="date-full" style="color: #bbb;">19 de Abril, 2026</div>
+            </div>
+        </div>
+
+        <!-- 2. PERFIL -->
+        <div class="profile-section">
+            <div class="profile-pic-placeholder">
+                <!-- src="perfil.png" en local -->
+                <img src="https://i.imgur.com/t2mYRCR.png" alt="Perfil">
+            </div>
+            
+            <h2 class="profile-name">Lita</h2>
+            <p class="profile-subtitle">ID: 181818</p>
+            
+            <div class="online-status-container">
+                <div class="status-dot"></div>
+                <span class="status-text">En línea</span>
+                <img src="https://flagsapi.com/CL/flat/64.png" alt="Chile Flag" class="country-flag">
+            </div>
+            
+            <!-- src="decoracion_perfil.gif" en local -->
+            <img src="https://i.imgur.com/B8NvrFs.gif" alt="Decoración Cute" style="width: 200px; margin: 15px 0;">
+
+            <div style="display: flex; gap: 10px; margin-top: auto;">   
+            </div>
+        </div>
+
+        <!-- 3. APPS Y WIDGETS -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="apps-grid">
+                <!-- BOTÓN: SOBRE MÍ -->
+                <a href="#" class="app-icon" onclick="openModal('modal-about')">
+                    <svg class="app-svg" viewBox="0 0 100 100">
+                        <rect x="20" y="20" width="60" height="60" rx="15" fill="#FFD6E7" />
+                        <path d="M35 40 L65 40 M35 60 L65 60" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="70" cy="30" r="10" fill="#FFB7D5" />
+                    </svg>
+                    <span class="text-bold">Sobre Mí</span>
+                </a>
+                
+                <!-- WIDGET: GALERÍA (GIF Decorativo) -->
+                <div class="widget-container">
+                    <!-- src="galeria_widget.gif" en local -->
+                    <img src="https://i.imgur.com/jruWl3C.gif" alt="Widget Galería" class="gif-widget">
+                </div>
+
+                <!-- WIDGET: IMAGEN ABAJO IZQUIERDA -->
+                <div class="widget-container">
+                    <!-- src="sobre_mi.jpg" o "decoracion_1.jpeg" en local -->
+                    <img src="https://i.imgur.com/bLwLXNe.jpeg" alt="Decoración JPG" class="gif-widget">
+                </div>
+                
+                <!-- WIDGET: GIF ABAJO DERECHA -->
+                <div class="widget-container">
+                    <!-- src="decoracion_2.gif" en local -->
+                    <img src="https://i.imgur.com/1jP5LaC.gif" alt="Decoración GIF" class="gif-widget">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. REPRODUCTOR DE MÚSICA (4 TRACKS) -->
+        <div class="music-player">
+            <!-- Añadido autoplay para intento inicial -->
+            <audio id="audio-player" autoplay></audio>
+
+            <div class="equalizer-cover paused" id="equalizer">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+
+            <div class="track-info">
+                <div class="track-title" id="track-title">Cargando...</div>
+                <div class="text-sm" id="track-artist">...</div>
+                <div class="volume-container">
+                    <span style="font-size: 0.8rem;">🔊</span>
+                    <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.5">
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-btn" id="prev-btn">⏮</div>
+                <div class="control-btn" id="play-btn">▶</div>
+                <div class="control-btn" id="next-btn">⏭</div>
+            </div>
+        </div>
+
+    
+
+        <!-- ✏️ FIRMA AL PIE DE PÁGINA -->
+        <div class="footer-copyright">
+            ©2026 Eam96 Xatspace Design
+        </div>
+
+    </div>
+
+    <!-- 🌟 VENTANA MODAL: SOBRE MÍ -->
+    <div id="modal-about" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-close" onclick="closeModal('modal-about')">✕</div>
+            <h2 style="color: var(--text-color);">✨ Sobre Mí ✨</h2>
+            <p style="color: #888; line-height: 1.6;">
+                ¡Hola! Soy Lita. Me encantan las nubes de canela, dormir la siesta y jugar con mis amigos Mocha, Chiffon y Cappuccino.
+                <br><br>
+                🎂 Cumpleaños: 6 de Marzo<br>
+                📍 Ubicación: Café Cinnamon<br>
+                💖 Gustos: Volar con mis orejas grandes
+            </p>
+        </div>
+    </div>
+
+    <!-- 🌟 SCRIPTS -->
+    <script>
+        // --- CONFIGURACIÓN DEL CURSOR Y EFECTOS ---
+        const cursorDot = document.getElementById("cursor-dot");
+        const splashScreen = document.getElementById("splash-screen");
+        const enterBtn = document.getElementById("enter-btn");
+
+        enterBtn.addEventListener("click", () => {
+            splashScreen.style.opacity = "0";
+            splashScreen.style.visibility = "hidden";
+            // Activado: Iniciar música al hacer click (Interacción válida)
+            playMusic(); 
+        });
+
+        window.addEventListener("mousemove", (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            createStarTrail(posX, posY);
+        });
+
+        function createStarTrail(x, y) {
+            if(Math.random() > 0.8) { 
+                const star = document.createElement("div");
+                star.classList.add("star-particle");
+                star.innerHTML = "★";
+                const randomX = x + (Math.random() - 0.5) * 10;
+                const randomY = y + (Math.random() - 0.5) * 10;
+                star.style.left = `${randomX}px`;
+                star.style.top = `${randomY}px`;
+                const colors = ['#FFD6E7', '#E0F7FA', '#FFF9C4', '#FFB7D5'];
+                star.style.color = colors[Math.floor(Math.random() * colors.length)];
+                document.body.appendChild(star);
+                setTimeout(() => { star.remove(); }, 1000);
+            }
+        }
+
+        document.querySelectorAll('a, button, .control-btn').forEach(el => {
+            el.addEventListener('mouseenter', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(1.5)');
+            el.addEventListener('mouseleave', () => cursorDot.style.transform = 'translate(-50%, -50%) scale(1)');
+        });
+
+        // --- CONFIGURACIÓN DEL RELOJ Y FECHA ---
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const timeString = `${hours}:${minutes} ${ampm}`;
+            
+            document.getElementById('clock').textContent = timeString;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('es-ES', options);
+            
+            const parts = dateString.split(','); 
+            if(parts.length > 0) {
+                const dayName = parts[0].trim();
+                document.getElementById('day-name').textContent = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+                
+                if(parts.length > 1) {
+                    document.getElementById('date-full').textContent = parts.slice(1).join(',').trim();
+                } else {
+                    document.getElementById('date-full').textContent = dateString;
+                }
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // --- CONFIGURACIÓN DEL REPRODUCTOR DE MÚSICA (4 TRACKS) ---
+        const playlist = [
+            {
+                title: "I Love You",
+                artist: "Billie Eilish",
+                file: "cancion1.mp3"
+            },
+            {
+                title: "BLUE",
+                artist: "Billie Eilish",
+                file: "cancion2.mp3"
+            },
+            {
+                title: "Birds of a Feather",
+                artist: "Billie Eilish",
+                file: "cancion3.mp3"
+            },
+            {
+                title: "Lovely",
+                artist: "Billie Eilish",
+                file: "cancion4.mp3"
+            }
+        ];
+
+        let currentTrackIndex = 0;
+        const audio = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const trackTitle = document.getElementById('track-title');
+        const trackArtist = document.getElementById('track-artist');
+        const equalizer = document.getElementById('equalizer');
+        const volumeSlider = document.getElementById('volume-slider');
+        let isPlaying = false;
+
+        function loadTrack(index) {
+            const track = playlist[index];
+             audio.src = track.file; 
+             // Si usas enlaces online de prueba, descomenta y usa: audio.src = "URL";
+
+            trackTitle.textContent = track.title;
+            trackArtist.textContent = track.artist;
+        }
+
+        // --- FUERZA BRUTA DE AUTOPLAY (Móviles) ---
+        const tryPlay = () => {
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    playBtn.textContent = '⏸';
+                    equalizer.classList.remove('paused');
+                    equalizer.classList.add('playing');
+                }).catch(e => {
+                    console.log("Esperando interacción para audio...");
+                });
+            }
+        };
+
+        function playMusic() {
+            tryPlay();
+        }
+
+        function pauseMusic() {
+            audio.pause();
+            isPlaying = false;
+            playBtn.textContent = '▶';
+            equalizer.classList.remove('playing');
+            equalizer.classList.add('paused');
+        }
+
+        function nextTrack() {
+            currentTrackIndex++;
+            if (currentTrackIndex >= playlist.length) {
+                currentTrackIndex = 0; 
+            }
+            loadTrack(currentTrackIndex);
+            playMusic(); // Fuerza play al cambiar
+        }
+
+        function prevTrack() {
+            currentTrackIndex--;
+            if (currentTrackIndex < 0) {
+                currentTrackIndex = playlist.length - 1; 
+            }
+            loadTrack(currentTrackIndex);
+            playMusic(); // Fuerza play al cambiar
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) pauseMusic();
+            else playMusic();
+        });
+
+        nextBtn.addEventListener('click', nextTrack);
+        prevBtn.addEventListener('click', prevTrack);
+
+        volumeSlider.addEventListener('input', (e) => {
+            audio.volume = e.target.value;
+        });
+
+        // Carga inicial
+        loadTrack(currentTrackIndex);
+        
+        // Intento 1: Al cargar
+        tryPlay();
+
+        // Intento 2: Desbloqueo silencioso al primer toque en cualquier parte
+        const unlockAudio = () => {
+            if(!isPlaying) {
+                tryPlay();
+            }
+            // Limpieza de eventos una vez activado
+            ['click', 'touchstart', 'keydown'].forEach(evt => 
+                document.removeEventListener(evt, unlockAudio)
+            );
+        };
+
+        // Escuchar en todo el documento para desbloquear el audio
+        ['click', 'touchstart', 'keydown'].forEach(evt => 
+            document.addEventListener(evt, unlockAudio)
+        );
+
+
+        // --- VENTANAS MODALES ---
+        function openModal(id) {
+            document.getElementById(id).classList.add('modal-active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('modal-active');
+        }
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if(e.target === overlay) {
+                    overlay.classList.remove('modal-active');
+                }
+            });
+        });
+
+        // --- 🛡️ SEGURIDAD: BLOQUEO DE CLICK DERECHO ---
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); 
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                (e.ctrlKey && e.shiftKey && e.key === 'J') || 
+                (e.ctrlKey && e.key === 'u')
+            ) {
+                e.preventDefault();
+            }
+        });
+
+    </script>
+</body>
+</html>
