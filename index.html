@@ -28,16 +28,6 @@
             cursor: none; /* Cursor personalizado por defecto en PC */
         }
 
-        /* 📱 LÓGICA DE CURSOR MÓVIL: OCULTAR COMPLETAMENTE EN TÁCTIL */
-        @media (hover: none) and (pointer: coarse) {
-            * { cursor: auto !important; } /* Restaurar cursor nativo */
-            .cursor-dot, .star-particle { 
-                display: none !important; /* Desaparecer elementos del cursor custom */
-                opacity: 0 !important;
-                visibility: hidden !important;
-            }
-        }
-
         body {
             margin: 0;
             padding: 20px;
@@ -590,6 +580,10 @@
                 justify-content: center;
                 gap: 25px;
             }
+
+            /* FIX: Forzar ocultamiento de cursor en móvil */
+            .cursor-dot, .star-particle { display: none !important; opacity: 0 !important; pointer-events: none !important; }
+            * { cursor: auto !important; }
         }
         
         .text-sm { font-size: 0.8rem; opacity: 0.8; }
@@ -755,7 +749,6 @@
         <div class="modal-box">
             <div class="modal-close" onclick="closeModal('modal-about')">✕</div>
             <h2 style="color: var(--text-color);">✨ Sobre Mí ✨</h2>
-            <img src="https://media.tenor.com/d_F0q10yKqEAAAAi/cinnamoroll.gif" style="width: 100px;">
             <p style="color: #888; line-height: 1.6;">
                 ¡Hola! Soy Lita. Me encantan las nubes de canela, dormir la siesta y jugar con mis amigos Mocha, Chiffon y Cappuccino.
                 <br><br>
@@ -1000,3 +993,4 @@
     </script>
 </body>
 </html>
+
