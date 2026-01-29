@@ -28,6 +28,16 @@
             cursor: none; /* Cursor personalizado por defecto en PC */
         }
 
+        /* 📱 LÓGICA DE CURSOR MÓVIL: OCULTAR COMPLETAMENTE EN TÁCTIL */
+        @media (hover: none) and (pointer: coarse) {
+            * { cursor: auto !important; } /* Restaurar cursor nativo */
+            .cursor-dot, .star-particle { 
+                display: none !important; /* Desaparecer elementos del cursor custom */
+                opacity: 0 !important;
+                visibility: hidden !important;
+            }
+        }
+
         body {
             margin: 0;
             padding: 20px;
@@ -199,7 +209,7 @@
             max-width: 900px;
             display: grid;
             grid-template-columns: 300px 1fr;
-            grid-template-rows: auto auto 1fr;
+            grid-template-rows: auto auto auto 1fr;
             gap: 20px;
             padding: 20px;
             background: rgba(255, 255, 255, 0.4);
@@ -749,6 +759,13 @@
         <div class="modal-box">
             <div class="modal-close" onclick="closeModal('modal-about')">✕</div>
             <h2 style="color: var(--text-color);">✨ Sobre Mí ✨</h2>
+            
+            <!-- Círculo de imagen de perfil añadido -->
+            <div class="profile-pic-placeholder" style="margin: 0 auto 15px auto;">
+                <img src="profile.jpg" alt="Foto de Perfil">
+            </div>
+
+            <img src="https://media.tenor.com/d_F0q10yKqEAAAAi/cinnamoroll.gif" style="width: 100px;">
             <p style="color: #888; line-height: 1.6;">
                 ¡Hola! Soy Lita. Me encantan las nubes de canela, dormir la siesta y jugar con mis amigos Mocha, Chiffon y Cappuccino.
                 <br><br>
@@ -993,4 +1010,5 @@
     </script>
 </body>
 </html>
+
 
